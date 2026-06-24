@@ -4,8 +4,10 @@
 
 | 工具 | 版本 |
 |------|------|
-| Node.js | >= 20 |
+| Node.js | >= 20，< 25（推荐 20 LTS 或 22 LTS） |
 | npm | >= 10 |
+
+使用 nvm/fnm 时，根目录 `.nvmrc` 指向 Node 22。
 
 ## 目录结构
 
@@ -49,8 +51,9 @@ packages/
 ### 根目录
 
 ```bash
-npm install              # 安装所有 workspace 依赖
+npm install              # 安装所有 workspace 依赖（含 Electron 二进制校验）
 npm run dev              # 启动 server + client + electron
+npm run dev:web          # 仅启动 server + client（无 Electron）
 npm run build            # 构建 shared → client → server → electron
 npm run build:electron   # 完整构建 + 打包安装包
 npm run lint             # ESLint 检查
@@ -101,11 +104,28 @@ $env:PORT="3850"; npm run dev -w @json-viewer/server
 Error: Electron failed to install correctly
 ```
 
+`npm install` 会通过 `postinstall` 自动下载 Electron 二进制。若仍失败，按顺序排查：
+
+1. 确认 Node.js 版本在 20–24 之间（推荐 22 LTS）
+2. 手动触发安装脚本：
+
 ```bash
+node node_modules/electron/install.js
+# 或（未提升时）
 node packages/electron/node_modules/electron/install.js
 ```
 
-若仍失败，删除 `node_modules` 后重新 `npm install`。
+3. 删除 Electron 包后重装：
+
+```bash
+# Windows PowerShell
+Remove-Item -Recurse -Force packages\electron\node_modules\electron
+npm install
+```
+
+4. 仍失败时删除整个 `node_modules` 后重新 `npm install`
+
+临时仅做 Web 开发：`npm run dev:web`
 
 ### Monaco Editor 加载慢
 

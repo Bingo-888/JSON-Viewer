@@ -5,20 +5,25 @@
   "description": "JSON/JSONC visual editor with tree and code dual-pane",
   "license": "MIT",
   "engines": {
-    "node": ">=20"
+    "node": ">=20 <25"
   },
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
+    "postinstall": "node scripts/ensure-electron.mjs",
     "build": "npm run build -w @json-viewer/shared && npm run build -w @json-viewer/client && npm run build -w @json-viewer/server && npm run build -w @json-viewer/electron",
     "build:electron": "npm run build && npm run package -w @json-viewer/electron",
     "package": "npm run build:electron",
     "dev": "concurrently -n server,client,electron -c blue,green,yellow \"npm run dev -w @json-viewer/server\" \"npm run dev -w @json-viewer/client\" \"wait-on http://localhost:5173 http://localhost:3847/api/health && npm run dev -w @json-viewer/electron\"",
+    "dev:web": "concurrently -n server,client -c blue,green \"npm run dev -w @json-viewer/server\" \"npm run dev -w @json-viewer/client\"",
     "dev:server": "npm run dev -w @json-viewer/server",
     "dev:client": "npm run dev -w @json-viewer/client",
     "lint": "eslint \"packages/**/*.{ts,tsx}\"",
     "format": "prettier --write \"**/*.{ts,tsx,json,md,css}\""
+  },
+  "overrides": {
+    "yauzl": "^3.3.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.18.0",

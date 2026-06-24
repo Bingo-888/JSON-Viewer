@@ -84,6 +84,10 @@ npm run build:electron
 
 > 证书路径与密码应通过环境变量或 CI secrets 注入，勿提交到仓库。
 
+## Windows 路径注意事项
+
+在 Windows 上，项目路径或用户目录若包含非 ASCII 字符（如中文），`electron-builder` 打包 NSIS 安装包时可能失败。建议将仓库克隆到纯 ASCII 路径（如 `C:\dev\JSON-Viewer`），或将 `ELECTRON_BUILDER_CACHE` 设为 ASCII 路径。
+
 ## 相关文档
 
 - [开发指南](development.md)
