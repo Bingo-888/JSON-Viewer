@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
+    "dev:server": "npm run dev -w @json-viewer/server",
     "lint": "eslint \"packages/**/*.{ts,tsx}\"",
     "format": "prettier --write \"**/*.{ts,tsx,json,md,css}\""
   },
