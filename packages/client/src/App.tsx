@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { SplitLayout } from './components/Layout/SplitLayout';
 import { TreeView } from './components/TreeView/TreeView';
 import { CodeEditor } from './components/CodeEditor/CodeEditor';
@@ -20,6 +21,25 @@ function AppContent() {
     cancelJsoncOpen,
     validateMessage,
   } = useJsonDocument();
+
+  useEffect(() => {
+    const api = window.electronAPI;
+    if (!api) return;
+
+    return api.onMenuAction((action) => {
+      switch (action) {
+        case 'new':
+          newDocument();
+          break;
+        case 'open':
+          void openDocument();
+          break;
+        case 'save':
+          void saveDocument();
+          break;
+      }
+    });
+  }, [newDocument, openDocument, saveDocument]);
 
   return (
     <div className={styles.app}>

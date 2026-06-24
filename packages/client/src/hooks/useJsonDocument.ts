@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { isLikelyJsonc, objectToTree, parseJsonc, stringifyJson, type JsonValue } from '@json-viewer/shared';
 import { useDocumentStore } from '../stores/documentStore';
-import { createBrowserFileIO, type FileIO } from '../lib/fileIo';
+import { getFileIO, type FileIO } from '../lib/fileIo';
 
 const SKIP_JSONC_WARNING_KEY = 'json-viewer-skip-jsonc-warning';
 const LARGE_FILE_BYTES = 5 * 1024 * 1024;
@@ -12,7 +12,7 @@ interface PendingFile {
 }
 
 export function useJsonDocument(fileIO?: FileIO) {
-  const io = useMemo(() => fileIO ?? createBrowserFileIO(), [fileIO]);
+  const io = useMemo(() => fileIO ?? getFileIO(), [fileIO]);
 
   const [jsoncModalOpen, setJsoncModalOpen] = useState(false);
   const [pendingFile, setPendingFile] = useState<PendingFile | null>(null);

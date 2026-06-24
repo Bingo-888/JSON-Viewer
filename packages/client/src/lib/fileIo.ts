@@ -33,7 +33,11 @@ export function createBrowserFileIO(): FileIO {
     },
 
     save(content, path) {
-      const fileName = path?.endsWith('.json') ? path : path ? `${path.replace(/\.jsonc$/, '')}.json` : 'untitled.json';
+      const fileName = path?.endsWith('.json')
+        ? path
+        : path
+          ? `${path.replace(/\.jsonc$/, '')}.json`
+          : 'untitled.json';
       const blob = new Blob([content], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement('a');
@@ -44,4 +48,23 @@ export function createBrowserFileIO(): FileIO {
       return Promise.resolve(fileName);
     },
   };
+}
+
+export function createElectronFileIO(): FileIO {
+  const api = window.electronAPI;
+  if (!api) {
+    throw new Error('electronAPI is not available');
+  }
+
+  return {
+    open: () => api.openFile(),
+    save: (content, path) => api.saveFile(content, path ?? undefined),
+  };
+}
+
+export function getFileIO(): FileIO {
+  if (typeof window.electronAPI !== 'undefined') {
+    return createElectronFileIO();
+  }
+  return createBrowserFileIO();
 }
