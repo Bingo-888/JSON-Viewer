@@ -11,7 +11,9 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build -w @json-viewer/shared && npm run build -w @json-viewer/client && npm run build -w @json-viewer/server && npm run build -w @json-viewer/electron",
+    "build:electron": "npm run build && npm run package -w @json-viewer/electron",
+    "package": "npm run build:electron",
     "dev": "concurrently -n server,client,electron -c blue,green,yellow \"npm run dev -w @json-viewer/server\" \"npm run dev -w @json-viewer/client\" \"wait-on http://localhost:5173 http://localhost:3847/api/health && npm run dev -w @json-viewer/electron\"",
     "dev:server": "npm run dev -w @json-viewer/server",
     "dev:client": "npm run dev -w @json-viewer/client",

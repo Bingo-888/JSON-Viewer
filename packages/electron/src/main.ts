@@ -38,11 +38,24 @@ async function findAvailablePort(startPort: number): Promise<number> {
 
 async function startProductionServer(): Promise<number> {
   serverPort = await findAvailablePort(DEFAULT_PORT);
-  const serverEntry = path.resolve(__dirname, '../../server/dist/index.js');
+
+  const serverEntry = app.isPackaged
+    ? path.join(process.resourcesPath, 'server/dist/bundle.cjs')
+    : path.resolve(__dirname, '../../server/dist/bundle.cjs');
+
+  const clientDistPath = app.isPackaged
+    ? path.join(process.resourcesPath, 'client/dist')
+    : path.resolve(__dirname, '../../client/dist');
 
   return new Promise((resolve, reject) => {
     serverProcess = spawn(process.execPath, [serverEntry], {
-      env: { ...process.env, NODE_ENV: 'production', PORT: String(serverPort) },
+      env: {
+        ...process.env,
+        ELECTRON_RUN_AS_NODE: '1',
+        NODE_ENV: 'production',
+        PORT: String(serverPort),
+        CLIENT_DIST_PATH: clientDistPath,
+      },
       stdio: 'inherit',
     });
 
