@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import type { JsonNodeType, TreeNode } from '@json-viewer/shared';
+import type { JsonNodeType, JsonValue, TreeNode } from '@json-viewer/shared';
+import { parseEditedValue } from '../../lib/treeOps';
 import styles from './TreeView.module.css';
 
 const BADGE_CLASS: Record<JsonNodeType, string> = {
@@ -20,9 +21,12 @@ function formatValue(type: JsonNodeType, value: unknown): string {
 interface TreeNodeItemProps {
   node: TreeNode;
   depth?: number;
+  onEdit: (id: string, value: JsonValue) => void;
+  onDelete: (id: string) => void;
+  onAddChild: (id: string) => void;
 }
 
-export function TreeNodeItem({ node, depth = 0 }: TreeNodeItemProps) {
+export function TreeNodeItem({ node, depth = 0, onEdit, onDelete, onAddChild }: TreeNodeItemProps) {
   const [expanded, setExpanded] = useState(node.expanded ?? false);
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
@@ -38,6 +42,8 @@ export function TreeNodeItem({ node, depth = 0 }: TreeNodeItemProps) {
 
   const handleEditBlur = () => {
     setEditing(false);
+    const newValue = parseEditedValue(node.type, editValue);
+    onEdit(node.id, newValue);
   };
 
   return (
@@ -77,12 +83,40 @@ export function TreeNodeItem({ node, depth = 0 }: TreeNodeItemProps) {
             {formatValue(node.type, node.value)}
           </span>
         )}
+
+        <span className={styles.actions}>
+          {isBranch && (
+            <button
+              type="button"
+              className={styles.actionBtn}
+              title="添加子节点"
+              onClick={() => onAddChild(node.id)}
+            >
+              +
+            </button>
+          )}
+          <button
+            type="button"
+            className={styles.actionBtn}
+            title="删除节点"
+            onClick={() => onDelete(node.id)}
+          >
+            ×
+          </button>
+        </span>
       </div>
 
       {isBranch && expanded && node.children && (
         <div className={styles.children}>
           {node.children.map((child) => (
-            <TreeNodeItem key={child.id} node={child} depth={depth + 1} />
+            <TreeNodeItem
+              key={child.id}
+              node={child}
+              depth={depth + 1}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onAddChild={onAddChild}
+            />
           ))}
         </div>
       )}

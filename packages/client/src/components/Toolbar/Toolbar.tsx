@@ -1,39 +1,31 @@
 import styles from './Toolbar.module.css';
 
 interface ToolbarProps {
-  onOpenFile?: () => void;
+  onNew?: () => void;
+  onOpen?: () => void;
+  onSave?: () => void;
+  onFormat?: () => void;
+  onValidate?: () => void;
 }
 
-export function Toolbar({ onOpenFile }: ToolbarProps) {
-  const handleNew = () => console.log('new');
-  const handleOpen = () => {
-    if (onOpenFile) {
-      onOpenFile();
-      return;
-    }
-    console.log('open');
-  };
-  const handleSave = () => console.log('save');
-  const handleFormat = () => console.log('format');
-  const handleValidate = () => console.log('validate');
-
+export function Toolbar({ onNew, onOpen, onSave, onFormat, onValidate }: ToolbarProps) {
   return (
     <div className={styles.toolbar}>
       <span className={styles.title}>JSON Viewer</span>
-      <button type="button" className={styles.button} onClick={handleNew}>
+      <button type="button" className={styles.button} onClick={onNew}>
         新建
       </button>
-      <button type="button" className={styles.button} onClick={handleOpen}>
+      <button type="button" className={styles.button} onClick={onOpen}>
         打开
       </button>
-      <button type="button" className={styles.button} onClick={handleSave}>
+      <button type="button" className={styles.button} onClick={onSave}>
         保存
       </button>
       <span className={styles.separator} />
-      <button type="button" className={styles.button} onClick={handleFormat}>
+      <button type="button" className={styles.button} onClick={onFormat}>
         格式化
       </button>
-      <button type="button" className={styles.button} onClick={handleValidate}>
+      <button type="button" className={styles.button} onClick={onValidate}>
         校验
       </button>
     </div>

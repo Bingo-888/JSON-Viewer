@@ -30,6 +30,10 @@
   color: #16a34a;
 }
 
+.info {
+  color: #2563eb;
+}
+
 .spacer {
   flex: 1;
 }
