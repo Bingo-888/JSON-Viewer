@@ -1,3 +1,16 @@
+# Dev
+node_modules/
+dist/
+dist-electron/
+*.log
+.DS_Store
+Thumbs.db
+.env
+.env.*
+coverage/
+*.tsbuildinfo
+
+# AI Agent
 AGENTS.md
 .cursor
 .vscode
