@@ -1,7 +1,25 @@
+.treeContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.staleBanner {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #92400e;
+  background: #fef3c7;
+  border-bottom: 1px solid #fcd34d;
+}
+
 .tree {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 13px;
   padding: 8px 0;
+  flex: 1;
+  overflow: auto;
 }
 
 .node {
@@ -33,6 +51,9 @@
   color: #6b7280;
   flex-shrink: 0;
   cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
 }
 
 .togglePlaceholder {
@@ -42,6 +63,12 @@
 
 .key {
   color: #7c3aed;
+  font-weight: 500;
+  cursor: text;
+}
+
+.arrayIndex {
+  color: #0891b2;
   font-weight: 500;
 }
 
@@ -132,6 +159,26 @@
   min-width: 60px;
 }
 
+.inlineSelect {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 1px 4px;
+  border: 1px solid #3b82f6;
+  border-radius: 3px;
+  outline: none;
+}
+
+.editWrapper {
+  display: inline-flex;
+  align-items: center;
+}
+
+.editError {
+  font-size: 11px;
+  color: #dc2626;
+  flex-shrink: 0;
+}
+
 .empty {
   padding: 24px;
   text-align: center;
@@ -166,4 +213,38 @@
 .actionBtn:hover {
   background: #f3f4f6;
   color: #374151;
+}
+
+.addMenuWrapper {
+  position: relative;
+}
+
+.addMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 10;
+  min-width: 110px;
+  margin-top: 2px;
+  padding: 4px 0;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+}
+
+.addMenuItem {
+  display: block;
+  width: 100%;
+  padding: 4px 10px;
+  font-size: 12px;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: #374151;
+  cursor: pointer;
+}
+
+.addMenuItem:hover {
+  background: #f3f4f6;
 }
