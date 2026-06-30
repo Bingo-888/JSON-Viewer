@@ -24,37 +24,44 @@ function getNodeType(value: JsonValue): JsonNodeType {
   return typeof value as JsonNodeType;
 }
 
-function valueToTreeNode(key: string | null, value: JsonValue): TreeNode {
+function childPath(parentPath: string, key: string | null, index?: number): string {
+  if (key !== null) {
+    return `${parentPath}.${key}`;
+  }
+  if (index !== undefined) {
+    return `${parentPath}[${index}]`;
+  }
+  return parentPath;
+}
+
+function valueToTreeNode(key: string | null, value: JsonValue, parentPath = '$'): TreeNode {
   const type = getNodeType(value);
+  const path = key !== null ? childPath(parentPath, key) : parentPath;
   const node: TreeNode = {
     id: generateNodeId(),
     key,
     value,
     type,
+    path,
     expanded: type === 'object' || type === 'array',
   };
 
   if (type === 'object') {
     node.children = Object.entries(value as Record<string, JsonValue>).map(([childKey, childValue]) =>
-      valueToTreeNode(childKey, childValue),
+      valueToTreeNode(childKey, childValue, path),
     );
   } else if (type === 'array') {
-    node.children = (value as JsonValue[]).map((childValue) => valueToTreeNode(null, childValue));
+    node.children = (value as JsonValue[]).map((childValue, index) =>
+      valueToTreeNode(null, childValue, childPath(path, null, index)),
+    );
   }
 
   return node;
 }
 
+/** 始终返回单根节点树，空 object/array 也可在树中编辑 */
 export function objectToTree(value: JsonValue): TreeNode[] {
-  if (value === null || typeof value !== 'object') {
-    return [valueToTreeNode(null, value)];
-  }
-
-  if (Array.isArray(value)) {
-    return value.map((item) => valueToTreeNode(null, item));
-  }
-
-  return Object.entries(value).map(([key, childValue]) => valueToTreeNode(key, childValue));
+  return [valueToTreeNode(null, value)];
 }
 
 function treeNodeToValue(node: TreeNode): JsonValue {

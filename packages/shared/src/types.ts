@@ -11,6 +11,8 @@ export type TreeNode = {
   type: JsonNodeType;
   children?: TreeNode[];
   expanded?: boolean;
+  /** JSON Path，如 $.users[0].name */
+  path?: string;
 };
 
 export type SourceFormat = 'json' | 'jsonc';
