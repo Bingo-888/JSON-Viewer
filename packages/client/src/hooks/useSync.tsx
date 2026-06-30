@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useRef, type MutableRefObject, type ReactNode } from 'react';
 import { objectToTree, parseJsonc, stringifyJson, treeToObject, type JsonValue, type TreeNode } from '@json-viewer/shared';
+import { collectExpandedByPath, mergeExpandedByPath } from '../lib/treePath';
 import { useDocumentStore } from '../stores/documentStore';
 
 export type SyncSource = 'none' | 'tree' | 'code';
@@ -38,8 +39,11 @@ export function SyncProvider({ children }: { children: ReactNode }) {
       debounceRef.current = setTimeout(() => {
         const result = parseJsonc(text);
         if (result.ok) {
+          const oldNodes = useDocumentStore.getState().treeNodes;
+          const expandedMap = collectExpandedByPath(oldNodes);
+          const newNodes = mergeExpandedByPath(objectToTree(result.data as JsonValue), expandedMap);
           setParsedObject(result.data);
-          setTreeNodes(objectToTree(result.data as JsonValue));
+          setTreeNodes(newNodes);
           setParseError(null);
         } else {
           setParseError(result.errors[0]?.message ?? 'JSON 解析失败');

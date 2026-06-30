@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { isLikelyJsonc, objectToTree, parseJsonc, stringifyJson, type JsonValue } from '@json-viewer/shared';
+import { rebuildTreePreservingExpanded } from '../lib/treePath';
 import { useDocumentStore } from '../stores/documentStore';
 import { getFileIO, type FileIO } from '../lib/fileIo';
 
@@ -39,7 +40,7 @@ export function useJsonDocument(fileIO?: FileIO) {
         parsedObject: result.data,
         filePath: file.path,
         sourceFormat: isJsonc ? 'jsonc' : 'json',
-        treeNodes: objectToTree(result.data as JsonValue),
+        treeNodes: rebuildTreePreservingExpanded(result.data as JsonValue, useDocumentStore.getState().treeNodes),
       });
       setValidateMessage(null);
     },
@@ -94,7 +95,7 @@ export function useJsonDocument(fileIO?: FileIO) {
       parsedObject: empty,
       filePath: null,
       sourceFormat: 'json',
-      treeNodes: objectToTree(empty),
+      treeNodes: objectToTree(empty as JsonValue),
     });
     setValidateMessage(null);
   }, [loadDocument]);
@@ -122,7 +123,7 @@ export function useJsonDocument(fileIO?: FileIO) {
       parsedObject: result.data,
       filePath,
       sourceFormat: useDocumentStore.getState().sourceFormat,
-      treeNodes: objectToTree(result.data as JsonValue),
+      treeNodes: rebuildTreePreservingExpanded(result.data as JsonValue, useDocumentStore.getState().treeNodes),
     });
     setValidateMessage('格式化成功');
   }, [rawText, filePath, loadDocument, setParseError]);
