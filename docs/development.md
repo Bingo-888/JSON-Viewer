@@ -40,11 +40,11 @@ packages/
 所有 package.json 里保持同一个版本号：
 | 位置                  | 当前版本 |
 |----------------------|----------|
-| 根目录 package.json   | 0.1.0    |
-| packages/shared       | 0.1.0    |
-| packages/client       | 0.1.0    |
-| packages/server       | 0.1.0    |
-| packages/electron     | 0.1.0    |
+| 根目录 package.json   | 0.2.0    |
+| packages/shared       | 0.2.0    |
+| packages/client       | 0.2.0    |
+| packages/server       | 0.2.0    |
+| packages/electron     | 0.2.0    |
 
 ## 常用命令
 
@@ -58,6 +58,7 @@ npm run build            # 构建 shared → client → server → electron
 npm run build:electron   # 完整构建 + 打包安装包
 npm run lint             # ESLint 检查
 npm run format           # Prettier 格式化
+npm test                 # Vitest 单元测试（shared + client）
 ```
 
 ### 各包独立开发
